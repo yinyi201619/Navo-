@@ -5,7 +5,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/fs"
 	"net/http"
 	"os"
 	"os/signal"
@@ -15,7 +14,6 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	navo "navo-nt-forum"
 	"navo-nt-forum/internal/config"
 	"navo-nt-forum/internal/database"
 	"navo-nt-forum/internal/router"
@@ -50,18 +48,13 @@ func main() {
 	}
 
 	userSvc := service.NewUserService(db)
-	tplEngine, err := tpl.NewEngine(navo.WebFS, "web/templates", cfg.Site.Name, cfg.Site.Description, userSvc)
+	tplEngine, err := tpl.NewEngine(tpl.OSFS{}, "web/templates", cfg.Site.Name, cfg.Site.Description, userSvc)
 	if err != nil {
 		logger.Fatal("模板引擎初始化失败", zap.Error(err))
 	}
 	logger.Info("模板引擎初始化完成")
 
-	// 静态资源
-	staticSub, err := fs.Sub(navo.WebFS, "web/static")
-	if err != nil {
-		logger.Fatal("静态资源加载失败", zap.Error(err))
-	}
-	router.SetStaticFS(http.FS(staticSub))
+	router.SetStaticFS(http.Dir("web/static"))
 
 	handler := router.NewRouter(cfg, db, tplEngine, logger)
 

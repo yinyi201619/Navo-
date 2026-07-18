@@ -3,10 +3,10 @@ package template
 
 import (
 	"bytes"
-	"embed"
 	"fmt"
 	"html/template"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -15,6 +15,25 @@ import (
 	"navo-nt-forum/internal/model"
 	"navo-nt-forum/internal/service"
 )
+
+type OSFS struct{}
+
+func (OSFS) Open(name string) (fs.File, error) {
+	return os.Open(name)
+}
+
+func (OSFS) ReadDir(name string) ([]fs.DirEntry, error) {
+	return os.ReadDir(name)
+}
+
+func (OSFS) ReadFile(name string) ([]byte, error) {
+	return os.ReadFile(name)
+}
+
+type FS interface {
+	fs.FS
+	fs.ReadDirFS
+}
 
 // Engine 模板引擎
 type Engine struct {
@@ -26,7 +45,7 @@ type Engine struct {
 }
 
 // NewEngine 创建模板引擎
-func NewEngine(tplFS embed.FS, root string, siteName, siteDesc string, userSvc *service.UserService) (*Engine, error) {
+func NewEngine(tplFS FS, root string, siteName, siteDesc string, userSvc *service.UserService) (*Engine, error) {
 	eng := &Engine{
 		templates: make(map[string]*template.Template),
 		siteName:  siteName,
@@ -51,13 +70,12 @@ func NewEngine(tplFS embed.FS, root string, siteName, siteDesc string, userSvc *
 		"roleClass":    roleClass,
 		"statusLabel":  statusLabel,
 		"roleLabel":    roleLabel,
-		"highlight":      highlight,
+		"highlight":    highlight,
 		"formatDateTime": formatDateTime,
 		"addf":           addf,
 		"mulf":           mulf,
 	}
 
-	// 遍历所有模板文件
 	layouts, err := fs.Glob(tplFS, filepath.Join(root, "layout/*.tmpl"))
 	if err != nil {
 		return nil, err
@@ -71,7 +89,6 @@ func NewEngine(tplFS embed.FS, root string, siteName, siteDesc string, userSvc *
 	if err != nil {
 		return nil, err
 	}
-	// 子目录页面
 	adminPages, _ := fs.Glob(tplFS, filepath.Join(root, "admin/*.tmpl"))
 	pages = append(pages, adminPages...)
 
