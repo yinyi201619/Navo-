@@ -31,7 +31,7 @@ func Init(cfg *config.Config, log *zap.Logger) (*gorm.DB, error) {
 				return nil, fmt.Errorf("创建 sqlite 目录失败: %w", e)
 			}
 		}
-		db, err = gorm.Open(sqlite.Open(cfg.Database.DSN), &gorm.Config{
+		db, err = gorm.Open(sqlite.Open(cfg.Database.DSN+"?busy_timeout=5000&_journal_mode=WAL"), &gorm.Config{
 			Logger: logger.Default.LogMode(gormLogLevel),
 		})
 	case "mysql":

@@ -26,7 +26,6 @@ func (s *PointService) AddPoints(userID, action, refID, remark string) (int, int
 		return 0, 0, errors.New("积分规则不存在")
 	}
 
-	// 检查每日上限
 	if rule.DailyLimit > 0 {
 		start := time.Now().Truncate(24 * time.Hour)
 		end := start.Add(24 * time.Hour)
@@ -39,37 +38,35 @@ func (s *PointService) AddPoints(userID, action, refID, remark string) (int, int
 		}
 	}
 
-	var pointsDelta, expDelta int
-	err := s.db.Transaction(func(tx *gorm.DB) error {
-		var u model.User
-		if err := tx.First(&u, "id = ?", userID).Error; err != nil {
-			return err
-		}
-		newPoints := u.Points + rule.Points
-		newExp := u.Experience + rule.Experience
-		newLevel := model.CalcLevel(newExp)
-		pointsDelta = rule.Points
-		expDelta = rule.Experience
+	return s.addPointsTx(s.db, userID, &rule, refID, remark)
+}
 
-		if err := tx.Model(&u).Updates(map[string]interface{}{
-			"points":     newPoints,
-			"experience": newExp,
-			"level":      newLevel,
-		}).Error; err != nil {
-			return err
-		}
+func (s *PointService) addPointsTx(tx *gorm.DB, userID string, rule *model.PointRule, refID, remark string) (int, int, error) {
+	var u model.User
+	if err := tx.First(&u, "id = ?", userID).Error; err != nil {
+		return 0, 0, err
+	}
+	newPoints := u.Points + rule.Points
+	newExp := u.Experience + rule.Experience
+	newLevel := model.CalcLevel(newExp)
 
-		log := model.PointLog{
-			UserID:   userID,
-			Action:   action,
-			Delta:    rule.Points,
-			ExpDelta: rule.Experience,
-			RefID:    refID,
-			Remark:   remark,
-		}
-		return tx.Create(&log).Error
-	})
-	return pointsDelta, expDelta, err
+	if err := tx.Model(&u).Updates(map[string]interface{}{
+		"points":     newPoints,
+		"experience": newExp,
+		"level":      newLevel,
+	}).Error; err != nil {
+		return 0, 0, err
+	}
+
+	log := model.PointLog{
+		UserID:   userID,
+		Action:   rule.Action,
+		Delta:    rule.Points,
+		ExpDelta: rule.Experience,
+		RefID:    refID,
+		Remark:   remark,
+	}
+	return rule.Points, rule.Experience, tx.Create(&log).Error
 }
 
 // UserLogs 积分日志
@@ -146,18 +143,42 @@ func (s *CheckinService) Checkin(userID string) (int, int, error) {
 		if err := tx.Create(&rec).Error; err != nil {
 			return err
 		}
-		_, _, err := s.point.AddPoints(userID, "checkin", "", "签到奖励")
-		// 手动调整到实际签到积分（规则里是基础 3 分，额外连续奖励单独加）
-		if err != nil {
+
+		var rule model.PointRule
+		if err := tx.Where("action = ?", "checkin").First(&rule).Error; err != nil {
 			return err
 		}
+
+		var u model.User
+		if err := tx.First(&u, "id = ?", userID).Error; err != nil {
+			return err
+		}
+
+		newPoints := u.Points + points
+		newExp := u.Experience + rule.Experience
+		newLevel := model.CalcLevel(newExp)
+
+		if err := tx.Model(&u).Updates(map[string]interface{}{
+			"points":     newPoints,
+			"experience": newExp,
+			"level":      newLevel,
+		}).Error; err != nil {
+			return err
+		}
+
+		baseLog := model.PointLog{
+			UserID:   userID,
+			Action:   "checkin",
+			Delta:    3,
+			ExpDelta: rule.Experience,
+			Remark:   "签到奖励",
+		}
+		if err := tx.Create(&baseLog).Error; err != nil {
+			return err
+		}
+
 		extra := points - 3
 		if extra > 0 {
-			var u model.User
-			tx.First(&u, "id = ?", userID)
-			tx.Model(&u).Updates(map[string]interface{}{
-				"points": u.Points + extra,
-			})
 			tx.Create(&model.PointLog{
 				UserID:   userID,
 				Action:   "checkin",
