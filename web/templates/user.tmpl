@@ -1,0 +1,157 @@
+{{ define "content" }}
+<div style="margin:24px 0;">
+  <div class="glass-card profile-header fade-in">
+    <div style="position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));"></div>
+    <div style="position:relative;">
+      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ .User.Username }}" alt="" class="profile-avatar">
+      <div class="profile-name">
+        {{ .User.Username }}
+        {{ if .Brief.Verified }}
+        <span class="verified-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          {{ .Brief.VerifyLabel }}
+        </span>
+        {{ end }}
+      </div>
+      <div class="profile-sign">{{ if .User.Signature }}{{ .User.Signature }}{{ else }}这个人很懒，什么都没写~{{ end }}</div>
+
+      <div class="profile-level">
+        <span class="level-badge">Lv.{{ .LevelInfo.Level }}</span>
+        <div class="level-progress">
+          <div class="level-progress-bar" style="width:{{ .LevelInfo.Progress }}%;"></div>
+        </div>
+        <div style="font-size:11px;color:var(--color-gray-400);margin-top:4px;">
+          {{ .User.Experience }} / {{ .LevelInfo.NextExp }} 经验
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:40px;margin-top:20px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.06);">
+        <div style="text-align:center;">
+          <strong style="display:block;font-size:18px;color:var(--color-gray-800);">{{ .TopicTotal }}</strong>
+          <span style="font-size:12px;color:var(--color-gray-500);">主题</span>
+        </div>
+        <div style="text-align:center;">
+          <strong style="display:block;font-size:18px;color:var(--color-gray-800);">{{ .ReplyTotal }}</strong>
+          <span style="font-size:12px;color:var(--color-gray-500);">回复</span>
+        </div>
+        <div style="text-align:center;">
+          <strong style="display:block;font-size:18px;color:var(--color-gray-800);">{{ .User.Points }}</strong>
+          <span style="font-size:12px;color:var(--color-gray-500);">积分</span>
+        </div>
+      </div>
+
+      {{ if .IsLogin }}
+      <div style="margin-top:20px;display:flex;justify-content:center;gap:10px;">
+        {{ if .IsSelf }}
+        <a href="/settings" class="btn btn-secondary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          编辑资料
+        </a>
+        {{ else }}
+        <button class="btn btn-secondary btn-sm" onclick="sendMessage('{{ .User.Username }}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          私信
+        </button>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </div>
+
+  <div class="profile-nav fade-in fade-in-delay-1">
+    <a href="/u/{{ .User.Username }}" class="{{ if eq .ActiveTab "topics" }}active{{ end }}">主题</a>
+    <a href="/u/{{ .User.Username }}/topics" class="{{ if eq .ActiveTab "replies" }}active{{ end }}">回复</a>
+  </div>
+
+  <div class="layout-grid fade-in fade-in-delay-2">
+    <div class="layout-main">
+      <div class="topic-list">
+        {{ range $i, $t := .Topics }}
+        <div class="topic-item">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ $t.Author.Username }}" alt="" class="topic-avatar">
+          <div class="topic-main">
+            <div class="topic-title">
+              {{ if $t.IsPinned }}<span class="tag tag-pin">置顶</span>{{ end }}
+              {{ if $t.IsEssence }}<span class="tag tag-essence">精华</span>{{ end }}
+              <a href="/t/{{ $t.ID }}">{{ $t.Title }}</a>
+            </div>
+            <div class="topic-meta">
+              <span>{{ $t.Category.Name }}</span>
+              <span>{{ relativeTime $t.CreatedAt }}</span>
+            </div>
+          </div>
+          <div class="topic-stats">
+            <span title="回复">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              {{ $t.ReplyCount }}
+            </span>
+            <span title="浏览">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              {{ $t.ViewCount }}
+            </span>
+          </div>
+        </div>
+        {{ else }}
+        <div class="glass-card" style="padding:40px;text-align:center;color:var(--color-gray-500);">
+          暂无发布的主题
+        </div>
+        {{ end }}
+      </div>
+
+      {{ if .TotalPages }}
+      <div class="pagination">
+        {{ if eq .Page 1 }}
+        <span class="disabled">上一页</span>
+        {{ else }}
+        <a href="?page={{ sub .Page 1 }}">上一页</a>
+        {{ end }}
+        {{ range $i := seq 1 .TotalPages }}
+          {{ if eq $i $.Page }}
+          <span class="current">{{ $i }}</span>
+          {{ else }}
+          <a href="?page={{ $i }}">{{ $i }}</a>
+          {{ end }}
+        {{ end }}
+        {{ if eq .Page .TotalPages }}
+        <span class="disabled">下一页</span>
+        {{ else }}
+        <a href="?page={{ add .Page 1 }}">下一页</a>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+
+    <div class="layout-side">
+      <div class="glass-card side-block">
+        <h3>个人信息</h3>
+        <div style="font-size:13px;color:var(--color-gray-600);line-height:2;">
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:var(--color-gray-500);">UID</span>
+            <span>{{ .User.ID }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:var(--color-gray-500);">注册时间</span>
+            <span>{{ formatTime .User.CreatedAt }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:var(--color-gray-500);">最后登录</span>
+            <span>{{ relativeTime .User.LastLoginAt }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <span style="color:var(--color-gray-500);">积分</span>
+            <span style="color:var(--color-primary);font-weight:600;">{{ .User.Points }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card side-block fade-in-delay-1">
+        <h3>等级：{{ .LevelInfo.Name }}</h3>
+        <div style="font-size:12px;color:var(--color-gray-500);line-height:1.8;">
+          <div>当前等级：Lv.{{ .LevelInfo.Level }} {{ .LevelInfo.Name }}</div>
+          <div>距离下一级还需 {{ sub .LevelInfo.NextExp .User.Experience }} 经验</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

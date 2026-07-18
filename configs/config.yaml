@@ -36,3 +36,12 @@ admin:
 log:
   level: info               # debug / info / warn / error
   encoding: json            # json / console
+
+# QQ OAuth 快捷登录（请自行配置 AppID / AppKey / 回调地址）
+qq_oauth:
+  enabled: false
+  app_id: ""
+  app_key: ""
+  # 完整回调地址：http(s)://你的域名/auth/qq/callback
+  callback: "/auth/qq/callback"
+  scope: "get_user_info"

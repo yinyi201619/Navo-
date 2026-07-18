@@ -161,7 +161,7 @@ func (s *UserService) ListVerifications(page, size int) ([]model.UserVerificatio
 func (s *UserService) UserTopics(userID string, page, size int) ([]model.Topic, int64, error) {
 	var topics []model.Topic
 	var total int64
-	q := s.db.Model(&model.Topic{}).Where("author_id = ? AND status = 1")
+	q := s.db.Model(&model.Topic{}).Where("author_id = ? AND status = 1", userID)
 	q.Count(&total)
 	err := q.Preload("Category").Order("created_at DESC").
 		Offset((page - 1) * size).Limit(size).Find(&topics).Error
@@ -172,7 +172,7 @@ func (s *UserService) UserTopics(userID string, page, size int) ([]model.Topic, 
 func (s *UserService) UserReplies(userID string, page, size int) ([]model.Reply, int64, error) {
 	var replies []model.Reply
 	var total int64
-	q := s.db.Model(&model.Reply{}).Where("author_id = ? AND status = 1")
+	q := s.db.Model(&model.Reply{}).Where("author_id = ? AND status = 1", userID)
 	q.Count(&total)
 	err := q.Preload("Topic").Order("created_at DESC").
 		Offset((page - 1) * size).Limit(size).Find(&replies).Error

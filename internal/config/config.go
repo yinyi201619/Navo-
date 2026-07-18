@@ -16,6 +16,7 @@ type Config struct {
 	Site     SiteConfig     `mapstructure:"site"`
 	Admin    AdminConfig    `mapstructure:"admin"`
 	Log      LogConfig      `mapstructure:"log"`
+	QQOAuth  QQOAuthConfig  `mapstructure:"qq_oauth"`
 }
 
 type ServerConfig struct {
@@ -56,6 +57,14 @@ type AdminConfig struct {
 type LogConfig struct {
 	Level    string `mapstructure:"level"`
 	Encoding string `mapstructure:"encoding"`
+}
+
+type QQOAuthConfig struct {
+	Enabled  bool   `mapstructure:"enabled"`
+	AppID    string `mapstructure:"app_id"`
+	AppKey   string `mapstructure:"app_key"`
+	Callback string `mapstructure:"callback"`
+	Scope    string `mapstructure:"scope"`
 }
 
 // Load 从指定路径加载配置

@@ -1,0 +1,62 @@
+{{ define "content" }}
+<div class="message-page fade-in">
+  <div class="glass-card message-box">
+    <div style="margin-bottom:20px;">
+      {{ if eq .Type "success" }}
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      {{ else if eq .Type "error" }}
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      {{ else if eq .Type "warning" }}
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      {{ else }}
+      <div style="width:64px;height:64px;border-radius:50%;background:rgba(99,102,241,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      </div>
+      {{ end }}
+    </div>
+
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Message }}</p>
+
+    {{ if .Data }}
+    <div style="padding:16px;background:rgba(99,102,241,0.05);border-radius:var(--radius-md);margin-bottom:20px;text-align:left;font-size:13px;color:var(--color-gray-600);">
+      {{ .Data }}
+    </div>
+    {{ end }}
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      {{ if .RedirectURL }}
+      <a href="{{ .RedirectURL }}" class="btn btn-primary">
+        {{ if .RedirectText }}{{ .RedirectText }}{{ else }}立即跳转{{ end }}
+      </a>
+      {{ end }}
+      <a href="javascript:history.back()" class="btn btn-secondary">返回上一页</a>
+      <a href="/" class="btn btn-secondary">返回首页</a>
+    </div>
+
+    {{ if .AutoRedirect }}
+    <p style="margin-top:16px;font-size:12px;color:var(--color-gray-400);">
+      <span id="countdown">{{ .RedirectTime }}</span> 秒后自动跳转...
+    </p>
+    <script>
+      var seconds = {{ .RedirectTime }};
+      var countdown = document.getElementById('countdown');
+      var timer = setInterval(function() {
+        seconds--;
+        countdown.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(timer);
+          window.location.href = '{{ .RedirectURL }}';
+        }
+      }, 1000);
+    </script>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

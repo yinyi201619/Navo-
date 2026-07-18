@@ -1,0 +1,77 @@
+{{ define "content" }}
+<div style="margin:24px 0;">
+  <div class="glass-card fade-in" style="overflow:hidden;">
+    <div class="message-layout" style="min-height:600px;">
+      <div class="message-sidebar">
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.06);">
+          <input type="text" class="form-input" placeholder="搜索联系人..." style="font-size:13px;padding:8px 12px;">
+        </div>
+
+        {{ range $i, $c := .Conversations }}
+        <div class="conv-item {{ if eq $c.User.Username .PeerUsername }}active{{ end }}" onclick="openConversation('{{ $c.ID }}')">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ $c.User.Username }}" alt="" class="conv-avatar">
+          <div class="conv-info">
+            <div class="conv-name">
+              <span>{{ $c.User.Username }}</span>
+              <span class="conv-time">{{ $c.LastTime }}</span>
+            </div>
+            <div class="conv-preview">
+              {{ if $c.IsMe }}我：{{ end }}{{ $c.LastMessage }}
+            </div>
+          </div>
+          {{ if $c.UnreadCount }}
+          <span class="conv-unread">{{ $c.UnreadCount }}</span>
+          {{ end }}
+        </div>
+        {{ end }}
+      </div>
+
+      <div class="message-main">
+        <div class="message-header">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ .Peer.Username }}" alt="" style="width:32px;height:32px;border-radius:50%;">
+            <span>{{ .Peer.Username }}</span>
+            {{ if .Peer.IsVerified }}
+            <span class="verified-badge" style="font-size:11px;">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px;"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </span>
+            {{ end }}
+          </div>
+        </div>
+
+        <div class="message-body" id="message-body">
+          {{ range $m := .Messages }}
+            {{ if $m.IsMe }}
+            <div style="text-align:right;margin-bottom:12px;">
+              <div class="bubble bubble-right">{{ $m.Content }}</div>
+              <div style="font-size:11px;color:var(--color-gray-400);margin-top:4px;">{{ $m.Time }}</div>
+            </div>
+            {{ else }}
+            <div style="display:flex;gap:10px;margin-bottom:12px;">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ .Peer.Username }}" alt="" style="width:32px;height:32px;border-radius:50%;flex-shrink:0;">
+              <div>
+                <div class="bubble bubble-left">{{ $m.Content }}</div>
+                <div style="font-size:11px;color:var(--color-gray-400);margin-top:4px;">{{ $m.Time }}</div>
+              </div>
+            </div>
+            {{ end }}
+          {{ else }}
+          <div style="text-align:center;color:var(--color-gray-400);padding:40px 0;">
+            <p style="font-size:13px;">还没有消息，开始聊天吧~</p>
+          </div>
+          {{ end }}
+        </div>
+
+        <div class="message-input-wrap">
+          <form method="post" action="/messages/{{ .Peer.Username }}/send" style="display:flex;gap:10px;">
+            <textarea name="content" class="form-input" placeholder="输入消息..." rows="1" style="resize:none;flex:1;max-height:120px;" required></textarea>
+            <button type="submit" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

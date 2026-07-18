@@ -1,0 +1,208 @@
+{{ define "content" }}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <div class="admin-logo">
+        <div class="admin-logo-icon">N</div>
+        <span>Navo NT 管理</span>
+      </div>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        仪表盘
+      </a>
+      <a href="/admin/users" class="admin-nav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        用户管理
+      </a>
+      <a href="/admin/topics" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        帖子管理
+      </a>
+      <a href="/admin/categories" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        板块管理
+      </a>
+      <a href="/admin/verifications" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        认证管理
+      </a>
+      <a href="/admin/points" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        积分管理
+      </a>
+      <a href="/admin/logs" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/>
+        </svg>
+        操作日志
+      </a>
+      <a href="/admin/settings" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        系统设置
+      </a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        返回首页
+      </a>
+    </div>
+  </aside>
+
+  <main class="admin-content">
+    <div class="admin-page-header">
+      <div>
+        <h1 class="admin-page-title">用户管理</h1>
+        <p class="admin-page-desc">管理社区所有用户账户</p>
+      </div>
+      <div class="admin-page-actions">
+        <button class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          添加用户
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-card admin-filter-card">
+      <form method="get" class="admin-filter-form">
+        <div class="admin-filter-group">
+          <input type="text" name="keyword" class="admin-input" placeholder="搜索用户名、邮箱..." value="{{ .Keyword }}">
+        </div>
+        <div class="admin-filter-group">
+          <select name="role" class="admin-select">
+            <option value="">全部角色</option>
+            <option value="admin" {{ if eq .Role "admin" }}selected{{ end }}>管理员</option>
+            <option value="moderator" {{ if eq .Role "moderator" }}selected{{ end }}>版主</option>
+            <option value="user" {{ if eq .Role "user" }}selected{{ end }}>普通用户</option>
+          </select>
+        </div>
+        <div class="admin-filter-group">
+          <select name="status" class="admin-select">
+            <option value="">全部状态</option>
+            <option value="active" {{ if eq .Status "active" }}selected{{ end }}>正常</option>
+            <option value="muted" {{ if eq .Status "muted" }}selected{{ end }}>禁言</option>
+            <option value="banned" {{ if eq .Status "banned" }}selected{{ end }}>封禁</option>
+          </select>
+        </div>
+        <div class="admin-filter-group">
+          <button type="submit" class="btn btn-primary">搜索</button>
+          <a href="/admin/users" class="btn btn-secondary" style="margin-left:8px;">重置</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3 class="admin-card-title">用户列表</h3>
+        <div class="admin-card-actions">
+          <span class="admin-badge-soft">共 {{ .Total }} 位用户</span>
+        </div>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>用户</th>
+              <th>角色</th>
+              <th>状态</th>
+              <th>等级</th>
+              <th>积分</th>
+              <th>注册时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range $u := .Users }}
+            <tr>
+              <td>
+                <div class="admin-user-cell">
+                  <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ $u.Username }}" alt="" class="admin-avatar">
+                  <div>
+                    <div class="admin-username">{{ $u.Username }}</div>
+                    <div class="admin-user-email">{{ $u.Email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                {{ if eq $u.Role "admin" }}
+                <span class="role-badge role-admin">管理员</span>
+                {{ else if eq $u.Role "moderator" }}
+                <span class="role-badge role-moderator">版主</span>
+                {{ else }}
+                <span class="role-badge role-user">用户</span>
+                {{ end }}
+              </td>
+              <td>
+                <span class="status-badge status-{{ statusClass $u.Status }}">{{ statusLabel $u.Status }}</span>
+              </td>
+              <td>
+                <span class="admin-level-badge">Lv.{{ $u.Level }}</span>
+              </td>
+              <td>
+                <span class="admin-points">{{ $u.Points }}</span>
+              </td>
+              <td class="admin-time-cell">{{ formatTime $u.CreatedAt }}</td>
+              <td>
+                <div class="admin-actions">
+                  <a href="/admin/users/{{ $u.ID }}" class="admin-action-btn admin-action-edit">编辑</a>
+                  {{ if eq (statusClass $u.Status) "active" }}
+                  <button class="admin-action-btn admin-action-muted" onclick="muteUser('{{ $u.ID }}')">禁言</button>
+                  <button class="admin-action-btn admin-action-ban" onclick="banUser('{{ $u.ID }}')">封禁</button>
+                  {{ else }}
+                  <button class="admin-action-btn admin-action-active" onclick="activateUser('{{ $u.ID }}')">恢复</button>
+                  {{ end }}
+                </div>
+              </td>
+            </tr>
+            {{ else }}
+            <tr>
+              <td colspan="7" class="admin-empty">暂无用户数据</td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+
+      {{ if .TotalPages }}
+      <div class="admin-pagination">
+        {{ if eq .Page 1 }}
+        <span class="admin-page-btn disabled">上一页</span>
+        {{ else }}
+        <a href="?page={{ sub .Page 1 }}&keyword={{ .Keyword }}&role={{ .Role }}&status={{ .Status }}" class="admin-page-btn">上一页</a>
+        {{ end }}
+        {{ range $i := seq 1 .TotalPages }}
+          {{ if eq $i $.Page }}
+          <span class="admin-page-btn active">{{ $i }}</span>
+          {{ else }}
+          <a href="?page={{ $i }}&keyword={{ $.Keyword }}&role={{ $.Role }}&status={{ $.Status }}" class="admin-page-btn">{{ $i }}</a>
+          {{ end }}
+        {{ end }}
+        {{ if eq .Page .TotalPages }}
+        <span class="admin-page-btn disabled">下一页</span>
+        {{ else }}
+        <a href="?page={{ add .Page 1 }}&keyword={{ .Keyword }}&role={{ .Role }}&status={{ .Status }}" class="admin-page-btn">下一页</a>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </main>
+</div>
+{{ end }}

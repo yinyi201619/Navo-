@@ -1,0 +1,38 @@
+{{ define "navbar" }}
+<nav class="navbar">
+  <div class="container navbar-inner">
+    <a href="/" class="logo">
+      <div class="logo-icon">N</div>
+      <span>Navo NT</span>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="{{ if eq .Active "home" }}active{{ end }}">首页</a>
+      <a href="/categories" class="{{ if eq .Active "categories" }}active{{ end }}">板块</a>
+      <a href="/search" class="{{ if eq .Active "search" }}active{{ end }}">搜索</a>
+    </div>
+    <div class="nav-right">
+      {{ if .IsLogin }}
+        <a href="/t/new" class="btn btn-primary btn-sm">发帖</a>
+        <div class="user-menu">
+          <img src="{{ if .Username }}{{ userAvatar .Username }}{{ else }}https://api.dicebear.com/7.x/avataaars/svg?seed=user{{ end }}" alt="" class="user-avatar-nav">
+          <div class="user-dropdown">
+            <a href="/u/{{ .Username }}">我的主页</a>
+            <a href="/messages">私信 {{ if .UnreadMessage }}<span style="float:right;background:#ef4444;color:white;font-size:11px;padding:0 6px;border-radius:10px;">{{ .UnreadMessage }}</span>{{ end }}</a>
+            <a href="/notifications">通知 {{ if .UnreadNotify }}<span style="float:right;background:#ef4444;color:white;font-size:11px;padding:0 6px;border-radius:10px;">{{ .UnreadNotify }}</span>{{ end }}</a>
+            <a href="/settings">设置</a>
+            {{ if .IsAdmin }}
+            <a href="/admin">后台管理</a>
+            {{ end }}
+            <form method="post" action="/logout" style="margin:0;">
+              <a href="#" onclick="this.parentElement.submit();return false;" style="color:#ef4444;">退出登录</a>
+            </form>
+          </div>
+        </div>
+      {{ else }}
+        <a href="/login" class="btn btn-secondary btn-sm">登录</a>
+        <a href="/register" class="btn btn-primary btn-sm">注册</a>
+      {{ end }}
+    </div>
+  </div>
+</nav>
+{{ end }}

@@ -37,6 +37,13 @@ const (
 	VerifyBot          VerifyType = "bot"          // 机器人认证
 )
 
+// OAuthProvider OAuth 平台
+type OAuthProvider string
+
+const (
+	OAuthQQ OAuthProvider = "qq"
+)
+
 // NotificationType 通知类型
 type NotificationType string
 
@@ -373,4 +380,28 @@ func GetLevelInfo(exp int) LevelInfo {
 		info.Progress = 100
 	}
 	return info
+}
+
+// UserOAuth 第三方登录绑定
+type UserOAuth struct {
+	ID         string        `gorm:"primaryKey;size:36" json:"id"`
+	UserID     string        `gorm:"size:36;not null;index" json:"userId"`
+	Provider   OAuthProvider `gorm:"size:20;not null;uniqueIndex:uk_provider_openid,priority:1" json:"provider"`
+	OpenID     string        `gorm:"size:64;not null;uniqueIndex:uk_provider_openid,priority:2" json:"openId"`
+	UnionID    string        `gorm:"size:64" json:"unionId"`
+	Nickname   string        `gorm:"size:100" json:"nickname"`
+	AvatarURL  string        `gorm:"size:500" json:"avatarUrl"`
+	AccessToken string       `gorm:"size:500" json:"-"`
+	ExpiresAt  *time.Time    `json:"expiresAt"`
+	CreatedAt  time.Time     `json:"createdAt"`
+	UpdatedAt  time.Time     `json:"updatedAt"`
+
+	User *User `gorm:"foreignKey:UserID" json:"user,omitempty"`
+}
+
+func (o *UserOAuth) BeforeCreate(tx *gorm.DB) error {
+	if o.ID == "" {
+		o.ID = uuid.NewString()
+	}
+	return nil
 }

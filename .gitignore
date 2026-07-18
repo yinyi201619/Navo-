@@ -1,0 +1,19 @@
+# 依赖
+/vendor/
+bin/
+data/
+*.db
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 环境变量
+.env
+.env.local

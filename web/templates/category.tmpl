@@ -1,0 +1,144 @@
+{{ define "content" }}
+<div class="fade-in" style="margin:24px 0;">
+  <div class="glass-card" style="padding:32px;margin-bottom:24px;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:0;right:0;width:200px;height:200px;background:radial-gradient(circle,rgba(99,102,241,0.15),transparent 70%);border-radius:50%;transform:translate(30%,-30%);"></div>
+    <div style="display:flex;align-items:center;gap:20px;position:relative;">
+      <div style="width:72px;height:72px;border-radius:var(--radius-lg);background:linear-gradient(135deg,var(--color-primary),var(--color-primary-2));display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <h1 style="font-size:24px;color:var(--color-gray-800);margin-bottom:6px;">{{ .Category.Name }}</h1>
+        <p style="color:var(--color-gray-500);font-size:14px;margin-bottom:12px;">{{ .Category.Description }}</p>
+        <div style="display:flex;gap:24px;font-size:13px;color:var(--color-gray-500);">
+          <span><strong style="color:var(--color-gray-700);">{{ .Category.TopicCount }}</strong> 主题</span>
+          <span><strong style="color:var(--color-gray-700);">{{ .Category.PostCount }}</strong> 帖子</span>
+          <span><strong style="color:var(--color-gray-700);">{{ .Category.MemberCount }}</strong> 成员</span>
+        </div>
+      </div>
+      {{ if .IsLogin }}
+      <div style="flex-shrink:0;">
+        <a href="/t/new?category={{ .Category.ID }}" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          发帖
+        </a>
+      </div>
+      {{ end }}
+    </div>
+  </div>
+
+  <div class="layout-grid">
+    <div class="layout-main">
+      <div class="section-title">
+        <h2>板块帖子</h2>
+        <div class="tabs">
+          <a href="?sort=latest" class="tab {{ if eq .Sort "latest" }}active{{ end }}">最新</a>
+          <a href="?sort=hot" class="tab {{ if eq .Sort "hot" }}active{{ end }}">热门</a>
+          <a href="?sort=essence" class="tab {{ if eq .Sort "essence" }}active{{ end }}">精华</a>
+        </div>
+      </div>
+
+      <div class="topic-list">
+        {{ range $i, $t := .Topics }}
+        <div class="topic-item fade-in" style="animation-delay:{{ mulf $i 0.05 }}s;">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ $t.Author.Username }}" alt="" class="topic-avatar">
+          <div class="topic-main">
+            <div class="topic-title">
+              {{ if $t.IsPinned }}<span class="tag tag-pin">置顶</span>{{ end }}
+              {{ if $t.IsEssence }}<span class="tag tag-essence">精华</span>{{ end }}
+              <a href="/t/{{ $t.ID }}">{{ $t.Title }}</a>
+            </div>
+            <div class="topic-meta">
+              <span class="author">{{ $t.Author.Username }}</span>
+              <span>Lv.{{ $t.Author.Level }}</span>
+              <span>{{ relativeTime $t.CreatedAt }}</span>
+            </div>
+          </div>
+          <div class="topic-stats">
+            <span title="回复">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              {{ $t.ReplyCount }}
+            </span>
+            <span title="浏览">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              {{ $t.ViewCount }}
+            </span>
+          </div>
+        </div>
+        {{ else }}
+        <div class="glass-card" style="padding:40px;text-align:center;color:var(--color-gray-500);">
+          该板块暂无帖子
+        </div>
+        {{ end }}
+      </div>
+
+      {{ if .TotalPages }}
+      <div class="pagination">
+        {{ if eq .Page 1 }}
+        <span class="disabled">上一页</span>
+        {{ else }}
+        <a href="?page={{ sub .Page 1 }}&sort={{ .Sort }}">上一页</a>
+        {{ end }}
+        {{ range $i := seq 1 .TotalPages }}
+          {{ if eq $i $.Page }}
+          <span class="current">{{ $i }}</span>
+          {{ else }}
+          <a href="?page={{ $i }}&sort={{ $.Sort }}">{{ $i }}</a>
+          {{ end }}
+        {{ end }}
+        {{ if eq .Page .TotalPages }}
+        <span class="disabled">下一页</span>
+        {{ else }}
+        <a href="?page={{ add .Page 1 }}&sort={{ .Sort }}">下一页</a>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+
+    <div class="layout-side">
+      <div class="glass-card side-block fade-in">
+        <h3>板块公告</h3>
+        <div style="font-size:13px;color:var(--color-gray-600);line-height:1.7;">
+          {{ if .Category.Notice }}
+          {{ .Category.Notice }}
+          {{ else }}
+          暂无公告
+          {{ end }}
+        </div>
+      </div>
+
+      <div class="glass-card side-block fade-in fade-in-delay-1">
+        <h3>活跃成员</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          {{ range .ActiveUsers }}
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ .Username }}" alt="" style="width:32px;height:32px;border-radius:50%;">
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:500;color:var(--color-gray-700);">{{ .Username }}</div>
+              <div style="font-size:11px;color:var(--color-gray-400);">Lv.{{ .Level }}</div>
+            </div>
+          </div>
+          {{ else }}
+          <p style="font-size:13px;color:var(--color-gray-500);">暂无活跃成员</p>
+          {{ end }}
+        </div>
+      </div>
+
+      <div class="glass-card side-block fade-in fade-in-delay-2">
+        <h3>其他板块</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          {{ range .OtherCategories }}
+          <a href="/c/{{ .Slug }}" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:var(--radius-md);transition:background .2s;" onmouseover="this.style.background='rgba(99,102,241,0.05)'" onmouseout="this.style.background='transparent'">
+            <div style="width:28px;height:28px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--color-primary),var(--color-primary-2));display:flex;align-items:center;justify-content:center;color:white;font-size:12px;">
+              {{ slice .Name 0 1 }}
+            </div>
+            <span style="font-size:13px;color:var(--color-gray-700);">{{ .Name }}</span>
+          </a>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

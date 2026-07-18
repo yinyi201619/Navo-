@@ -1,0 +1,254 @@
+{{ define "content" }}
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-header">
+      <div class="admin-logo">
+        <div class="admin-logo-icon">N</div>
+        <span>Navo NT 管理</span>
+      </div>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        仪表盘
+      </a>
+      <a href="/admin/users" class="admin-nav-item active">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        用户管理
+      </a>
+      <a href="/admin/topics" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        帖子管理
+      </a>
+      <a href="/admin/categories" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        板块管理
+      </a>
+      <a href="/admin/verifications" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        认证管理
+      </a>
+      <a href="/admin/points" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        积分管理
+      </a>
+      <a href="/admin/logs" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/>
+        </svg>
+        操作日志
+      </a>
+      <a href="/admin/settings" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        系统设置
+      </a>
+    </nav>
+    <div class="admin-sidebar-footer">
+      <a href="/" class="admin-nav-item">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        返回首页
+      </a>
+    </div>
+  </aside>
+
+  <main class="admin-content">
+    <div class="admin-page-header">
+      <div>
+        <div class="admin-breadcrumb">
+          <a href="/admin/users">用户管理</a>
+          <span>/</span>
+          <span>编辑用户</span>
+        </div>
+        <h1 class="admin-page-title">编辑用户 - {{ .User.Username }}</h1>
+        <p class="admin-page-desc">修改用户资料、角色、状态等信息</p>
+      </div>
+      <div class="admin-page-actions">
+        <a href="/admin/users" class="btn btn-secondary">返回列表</a>
+      </div>
+    </div>
+
+    <div class="admin-grid-2">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">基本资料</h3>
+        </div>
+        <form method="post" action="/admin/users/{{ .User.ID }}/edit" class="admin-form">
+          <div class="admin-form-group">
+            <label class="admin-form-label">用户名</label>
+            <input type="text" name="username" class="admin-input" value="{{ .User.Username }}">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">邮箱</label>
+            <input type="email" name="email" class="admin-input" value="{{ .User.Email }}">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">昵称</label>
+            <input type="text" name="nickname" class="admin-input" value="{{ .User.Nickname }}">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">个人简介</label>
+            <textarea name="bio" class="admin-textarea" rows="3">{{ .User.Bio }}</textarea>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">重置密码</label>
+            <input type="password" name="password" class="admin-input" placeholder="留空则不修改">
+          </div>
+          <div class="admin-form-actions">
+            <button type="submit" class="btn btn-primary">保存资料</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">角色与状态</h3>
+        </div>
+        <form method="post" action="/admin/users/{{ .User.ID }}/role" class="admin-form">
+          <div class="admin-form-group">
+            <label class="admin-form-label">用户角色</label>
+            <select name="role" class="admin-select">
+              <option value="user" {{ if eq .User.Role "user" }}selected{{ end }}>普通用户</option>
+              <option value="moderator" {{ if eq .User.Role "moderator" }}selected{{ end }}>版主</option>
+              <option value="admin" {{ if eq .User.Role "admin" }}selected{{ end }}>管理员</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">账户状态</label>
+            <select name="status" class="admin-select">
+              <option value="active" {{ if eq .User.Status "active" }}selected{{ end }}>正常</option>
+              <option value="muted" {{ if eq .User.Status "muted" }}selected{{ end }}>禁言</option>
+              <option value="banned" {{ if eq .User.Status "banned" }}selected{{ end }}>封禁</option>
+            </select>
+          </div>
+          {{ if eq .User.Status "muted" }}
+          <div class="admin-form-group">
+            <label class="admin-form-label">禁言到期时间</label>
+            <input type="datetime-local" name="mute_expire" class="admin-input" value="{{ formatDateTime .User.MuteExpireAt }}">
+          </div>
+          {{ end }}
+          <div class="admin-form-actions">
+            <button type="submit" class="btn btn-primary">保存设置</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="admin-grid-2">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">认证信息</h3>
+        </div>
+        <div class="admin-user-info">
+          <div class="admin-info-row">
+            <span class="admin-info-label">认证状态</span>
+            <span class="admin-info-value">
+              {{ if .User.Verified }}
+              <span class="status-badge status-active">已认证</span>
+              {{ else }}
+              <span class="status-badge status-muted">未认证</span>
+              {{ end }}
+            </span>
+          </div>
+          <div class="admin-info-row">
+            <span class="admin-info-label">认证类型</span>
+            <span class="admin-info-value">{{ .User.VerifyType }}</span>
+          </div>
+          <div class="admin-info-row">
+            <span class="admin-info-label">认证信息</span>
+            <span class="admin-info-value">{{ .User.VerifyInfo }}</span>
+          </div>
+          <div class="admin-form-actions" style="margin-top:16px;">
+            <a href="/admin/verifications?user={{ .User.Username }}" class="btn btn-secondary">查看认证申请</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h3 class="admin-card-title">积分调整</h3>
+        </div>
+        <form method="post" action="/admin/users/{{ .User.ID }}/points" class="admin-form">
+          <div class="admin-info-row" style="margin-bottom:16px;">
+            <span class="admin-info-label">当前积分</span>
+            <span class="admin-info-value admin-points-large">{{ .User.Points }}</span>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">调整类型</label>
+            <select name="type" class="admin-select">
+              <option value="add">增加积分</option>
+              <option value="sub">扣除积分</option>
+            </select>
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">积分数值</label>
+            <input type="number" name="points" class="admin-input" value="0" min="1">
+          </div>
+          <div class="admin-form-group">
+            <label class="admin-form-label">调整原因</label>
+            <textarea name="reason" class="admin-textarea" rows="2" placeholder="请输入调整原因"></textarea>
+          </div>
+          <div class="admin-form-actions">
+            <button type="submit" class="btn btn-primary">确认调整</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3 class="admin-card-title">积分变动记录</h3>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>时间</th>
+              <th>类型</th>
+              <th>变动</th>
+              <th>变动后</th>
+              <th>原因</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range $log := .PointLogs }}
+            <tr>
+              <td class="admin-time-cell">{{ formatTime $log.CreatedAt }}</td>
+              <td>{{ $log.TypeName }}</td>
+              <td>
+                {{ if gt $log.Points 0 }}
+                <span class="admin-points-plus">+{{ $log.Points }}</span>
+                {{ else }}
+                <span class="admin-points-minus">{{ $log.Points }}</span>
+                {{ end }}
+              </td>
+              <td>{{ $log.Balance }}</td>
+              <td>{{ $log.Reason }}</td>
+            </tr>
+            {{ else }}
+            <tr>
+              <td colspan="5" class="admin-empty">暂无积分记录</td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+{{ end }}

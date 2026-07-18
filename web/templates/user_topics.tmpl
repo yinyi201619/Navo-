@@ -1,0 +1,146 @@
+{{ define "content" }}
+<div style="margin:24px 0;">
+  <div class="glass-card profile-header fade-in">
+    <div style="position:absolute;top:0;left:0;right:0;height:120px;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(139,92,246,0.2));"></div>
+    <div style="position:relative;">
+      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ .User.Username }}" alt="" class="profile-avatar">
+      <div class="profile-name">
+        {{ .User.Username }}
+        {{ if .User.IsVerified }}
+        <span class="verified-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          {{ .User.VerifyType }}
+        </span>
+        {{ end }}
+      </div>
+      <div class="profile-sign">{{ if .User.Signature }}{{ .User.Signature }}{{ else }}这个人很懒，什么都没写~{{ end }}</div>
+      
+      <div class="profile-level">
+        <span class="level-badge">Lv.{{ .User.Level }}</span>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:40px;margin-top:20px;padding-top:20px;border-top:1px solid rgba(0,0,0,0.06);">
+        <div style="text-align:center;">
+          <strong style="display:block;font-size:18px;color:var(--color-gray-800);">{{ .User.TopicCount }}</strong>
+          <span style="font-size:12px;color:var(--color-gray-500);">主题</span>
+        </div>
+        <div style="text-align:center;">
+          <strong style="display:block;font-size:18px;color:var(--color-gray-800);">{{ .User.ReplyCount }}</strong>
+          <span style="font-size:12px;color:var(--color-gray-500);">回复</span>
+        </div>
+        <div style="text-align:center;">
+          <strong style="display:block;font-size:18px;color:var(--color-gray-800);">{{ .User.FollowerCount }}</strong>
+          <span style="font-size:12px;color:var(--color-gray-500);">粉丝</span>
+        </div>
+        <div style="text-align:center;">
+          <strong style="display:block;font-size:18px;color:var(--color-gray-800);">{{ .User.FollowingCount }}</strong>
+          <span style="font-size:12px;color:var(--color-gray-500);">关注</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-nav fade-in fade-in-delay-1">
+    <a href="/u/{{ .User.Username }}" class="active">主题</a>
+    <a href="/u/{{ .User.Username }}/replies">回复</a>
+    <a href="/u/{{ .User.Username }}/favorites">收藏</a>
+  </div>
+
+  <div class="layout-grid fade-in fade-in-delay-2">
+    <div class="layout-main">
+      <div class="section-title">
+        <h2 style="font-size:16px;">发布的主题 ({{ .Total }})</h2>
+        <div class="tabs">
+          <a href="?sort=latest" class="tab {{ if eq .Sort "latest" }}active{{ end }}">最新</a>
+          <a href="?sort=hot" class="tab {{ if eq .Sort "hot" }}active{{ end }}">热门</a>
+        </div>
+      </div>
+
+      <div class="topic-list">
+        {{ range $i, $t := .Topics }}
+        <div class="topic-item">
+          <div style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(99,102,241,0.1);color:var(--color-primary);font-weight:600;font-size:14px;flex-shrink:0;">
+            {{ add $i 1 }}
+          </div>
+          <div class="topic-main">
+            <div class="topic-title">
+              {{ if $t.IsPinned }}<span class="tag tag-pin">置顶</span>{{ end }}
+              {{ if $t.IsEssence }}<span class="tag tag-essence">精华</span>{{ end }}
+              <a href="/t/{{ $t.ID }}">{{ $t.Title }}</a>
+            </div>
+            <div class="topic-meta">
+              <span>{{ $t.Category.Name }}</span>
+              <span>{{ relativeTime $t.CreatedAt }}</span>
+            </div>
+          </div>
+          <div class="topic-stats">
+            <span title="回复">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              {{ $t.ReplyCount }}
+            </span>
+            <span title="浏览">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              {{ $t.ViewCount }}
+            </span>
+          </div>
+        </div>
+        {{ else }}
+        <div class="glass-card" style="padding:60px;text-align:center;color:var(--color-gray-500);">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;opacity:0.3;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <p>还没有发布过主题</p>
+          {{ if and .IsLogin (eq .User.Username .Username) }}
+          <a href="/t/new" class="btn btn-primary btn-sm" style="margin-top:12px;">发布第一篇</a>
+          {{ end }}
+        </div>
+        {{ end }}
+      </div>
+
+      {{ if .TotalPages }}
+      <div class="pagination">
+        {{ if eq .Page 1 }}
+        <span class="disabled">上一页</span>
+        {{ else }}
+        <a href="?page={{ sub .Page 1 }}&sort={{ .Sort }}">上一页</a>
+        {{ end }}
+        {{ range $i := seq 1 .TotalPages }}
+          {{ if eq $i $.Page }}
+          <span class="current">{{ $i }}</span>
+          {{ else }}
+          <a href="?page={{ $i }}&sort={{ $.Sort }}">{{ $i }}</a>
+          {{ end }}
+        {{ end }}
+        {{ if eq .Page .TotalPages }}
+        <span class="disabled">下一页</span>
+        {{ else }}
+        <a href="?page={{ add .Page 1 }}&sort={{ .Sort }}">下一页</a>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+
+    <div class="layout-side">
+      <div class="glass-card side-block">
+        <h3>统计数据</h3>
+        <div class="side-stat-grid">
+          <div class="side-stat">
+            <strong>{{ .User.TopicCount }}</strong>
+            <span>主题</span>
+          </div>
+          <div class="side-stat">
+            <strong>{{ .User.ReplyCount }}</strong>
+            <span>回复</span>
+          </div>
+          <div class="side-stat">
+            <strong>{{ .TotalViews }}</strong>
+            <span>总浏览</span>
+          </div>
+          <div class="side-stat">
+            <strong>{{ .TotalLikes }}</strong>
+            <span>获赞</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

@@ -1,0 +1,92 @@
+{{ define "content" }}
+<div class="layout-grid">
+  <div class="layout-main">
+    <div class="glass-card fade-in" style="padding:28px;">
+      <div class="section-title" style="margin-bottom:20px;">
+        <h2 style="font-size:20px;">发布新帖</h2>
+      </div>
+
+      {{ if .Error }}
+      <div style="padding:12px 16px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md);color:var(--color-danger);font-size:13px;margin-bottom:16px;">
+        {{ .Error }}
+      </div>
+      {{ end }}
+
+      <form method="post" action="/t/new">
+        <div class="form-group">
+          <label class="form-label">标题</label>
+          <input type="text" name="title" class="form-input" placeholder="请输入帖子标题，简洁明了" required maxlength="100" value="{{ .Form.Title }}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">选择板块</label>
+          <select name="category_id" class="form-select" required>
+            <option value="">请选择板块</option>
+            {{ range .Categories }}
+            <option value="{{ .ID }}" {{ if eq $.Form.CategoryID .ID }}selected{{ end }}>{{ .Name }}</option>
+            {{ end }}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            内容
+            <span style="float:right;font-weight:normal;font-size:12px;color:var(--color-gray-400);">支持 Markdown</span>
+          </label>
+          <textarea name="content" class="form-textarea" rows="15" placeholder="请输入帖子内容，支持 Markdown 语法..." required>{{ .Form.Content }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            标签
+            <span style="float:right;font-weight:normal;font-size:12px;color:var(--color-gray-400);">多个标签用空格或逗号分隔，最多5个</span>
+          </label>
+          <input type="text" name="tags" class="form-input" placeholder="如：技术分享 QQ机器人 教程" value="{{ .Form.Tags }}">
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:24px;">
+          <button type="submit" class="btn btn-primary" style="flex:1;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            发布帖子
+          </button>
+          <button type="button" class="btn btn-secondary" onclick="saveDraft()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            保存草稿
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="layout-side">
+    <div class="glass-card side-block fade-in fade-in-delay-1">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-primary);"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        发帖须知
+      </h3>
+      <ul style="font-size:13px;color:var(--color-gray-600);line-height:1.8;padding-left:18px;">
+        <li>请选择合适的板块发布</li>
+        <li>标题请简洁明了，概括主题</li>
+        <li>支持 Markdown 语法排版</li>
+        <li>严禁发布违法违规内容</li>
+        <li>优质内容可获得精华推荐</li>
+      </ul>
+    </div>
+
+    <div class="glass-card side-block fade-in fade-in-delay-2">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--color-primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Markdown 快捷语法
+      </h3>
+      <div style="font-size:12px;color:var(--color-gray-600);line-height:1.8;">
+        <p><code style="background:rgba(99,102,241,0.1);padding:2px 6px;border-radius:4px;"># 标题</code> 一级标题</p>
+        <p><code style="background:rgba(99,102,241,0.1);padding:2px 6px;border-radius:4px;">**粗体**</code> 加粗文本</p>
+        <p><code style="background:rgba(99,102,241,0.1);padding:2px 6px;border-radius:4px;">*斜体*</code> 倾斜文本</p>
+        <p><code style="background:rgba(99,102,241,0.1);padding:2px 6px;border-radius:4px;">[链接](url)</code> 插入链接</p>
+        <p><code style="background:rgba(99,102,241,0.1);padding:2px 6px;border-radius:4px;">```代码```</code> 代码块</p>
+        <p><code style="background:rgba(99,102,241,0.1);padding:2px 6px;border-radius:4px;">- 列表</code> 无序列表</p>
+      </div>
+    </div>
+  </div>
+</div>
+{{ end }}

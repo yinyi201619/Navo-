@@ -1,0 +1,184 @@
+{{ define "content" }}
+<div class="hero fade-in">
+  <h1>欢迎来到 {{ .SiteName }}</h1>
+  <p>众合会自研 QQ 机器人社区，分享技术、交流玩法、共同成长。</p>
+  <div>
+    <a href="/categories" class="btn btn-primary btn-lg">浏览板块</a>
+    {{ if .IsLogin }}
+    <a href="/t/new" class="btn btn-secondary btn-lg" style="margin-left:12px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);">立即发帖</a>
+    {{ else }}
+    <a href="/register" class="btn btn-secondary btn-lg" style="margin-left:12px;background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.3);">加入我们</a>
+    {{ end }}
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <strong>{{ .Stats.User }}</strong>
+      <span>注册用户</span>
+    </div>
+    <div class="hero-stat">
+      <strong>{{ .Stats.Topic }}</strong>
+      <span>主题帖</span>
+    </div>
+    <div class="hero-stat">
+      <strong>{{ .Stats.Reply }}</strong>
+      <span>回帖</span>
+    </div>
+  </div>
+</div>
+
+<div class="layout-grid">
+  <div class="layout-main">
+    <div class="section-title">
+      <h2>热门板块</h2>
+      <a href="/categories" style="font-size:13px;">查看全部 →</a>
+    </div>
+    <div class="category-grid fade-in fade-in-delay-1">
+      {{ range .Categories }}
+      <a href="/c/{{ .Slug }}" class="category-card">
+        <div class="category-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+        </div>
+        <div class="category-name">{{ .Name }}</div>
+        <div class="category-count">{{ .TopicCount }} 主题</div>
+      </a>
+      {{ end }}
+    </div>
+
+    <div class="section-title" style="margin-top:32px;">
+      <h2>最新帖子</h2>
+      <div class="tabs">
+        <a href="?sort=latest" class="tab {{ if eq .Sort "latest" }}active{{ end }}">最新</a>
+        <a href="?sort=hot" class="tab {{ if eq .Sort "hot" }}active{{ end }}">热门</a>
+        <a href="?sort=essence" class="tab {{ if eq .Sort "essence" }}active{{ end }}">精华</a>
+      </div>
+    </div>
+    <div class="topic-list">
+      {{ range $i, $t := .Topics }}
+      <div class="topic-item fade-in" style="animation-delay:{{ mulf $i 0.05 }}s;">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ $t.Author.Username }}" alt="" class="topic-avatar">
+        <div class="topic-main">
+          <div class="topic-title">
+            {{ if $t.IsPinned }}<span class="tag tag-pin">置顶</span>{{ end }}
+            {{ if $t.IsEssence }}<span class="tag tag-essence">精华</span>{{ end }}
+            <a href="/t/{{ $t.ID }}">{{ $t.Title }}</a>
+          </div>
+          <div class="topic-meta">
+            <span class="author">{{ $t.Author.Username }}</span>
+            <span>Lv.{{ $t.Author.Level }}</span>
+            <span>{{ $t.Category.Name }}</span>
+            <span>{{ relativeTime $t.CreatedAt }}</span>
+          </div>
+        </div>
+        <div class="topic-stats">
+          <span title="回复">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            {{ $t.ReplyCount }}
+          </span>
+          <span title="浏览">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            {{ $t.ViewCount }}
+          </span>
+        </div>
+      </div>
+      {{ else }}
+      <div class="glass-card" style="padding:40px;text-align:center;color:var(--color-gray-500);">
+        暂无帖子
+      </div>
+      {{ end }}
+    </div>
+
+    {{ if .TotalPages }}
+    <div class="pagination">
+      {{ if eq .Page 1 }}
+      <span class="disabled">上一页</span>
+      {{ else }}
+      <a href="?page={{ sub .Page 1 }}&sort={{ .Sort }}">上一页</a>
+      {{ end }}
+      {{ range $i := seq 1 .TotalPages }}
+        {{ if eq $i $.Page }}
+        <span class="current">{{ $i }}</span>
+        {{ else }}
+        <a href="?page={{ $i }}&sort={{ $.Sort }}">{{ $i }}</a>
+        {{ end }}
+      {{ end }}
+      {{ if eq .Page .TotalPages }}
+      <span class="disabled">下一页</span>
+      {{ else }}
+      <a href="?page={{ add .Page 1 }}&sort={{ .Sort }}">下一页</a>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+
+  <div class="layout-side">
+    {{ if .IsLogin }}
+    <div class="glass-card user-card fade-in">
+      <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ .Username }}" alt="" class="user-card-avatar">
+      <div class="user-card-name">{{ .Username }}</div>
+      <div class="user-card-sign">欢迎回来 👋</div>
+      <div class="user-card-stats">
+        <div>
+          <strong>0</strong>
+          <span>积分</span>
+        </div>
+        <div>
+          <strong>0</strong>
+          <span>关注</span>
+        </div>
+        <div>
+          <strong>0</strong>
+          <span>粉丝</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <a href="/t/new" class="btn btn-primary btn-sm btn-full">发布新帖</a>
+      </div>
+    </div>
+    {{ else }}
+    <div class="glass-card side-block fade-in">
+      <h3>加入社区</h3>
+      <p style="font-size:13px;color:var(--color-gray-600);margin-bottom:14px;">注册账号，参与讨论，获取积分，升级徽章！</p>
+      <a href="/register" class="btn btn-primary btn-full">立即注册</a>
+      <div style="text-align:center;margin-top:10px;font-size:12px;color:var(--color-gray-500);">
+        已有账号？<a href="/login">去登录</a>
+      </div>
+    </div>
+    {{ end }}
+
+    <div class="glass-card side-block fade-in fade-in-delay-1">
+      <h3>社区数据</h3>
+      <div class="side-stat-grid">
+        <div class="side-stat">
+          <strong>{{ .Stats.User }}</strong>
+          <span>用户</span>
+        </div>
+        <div class="side-stat">
+          <strong>{{ .Stats.Topic }}</strong>
+          <span>帖子</span>
+        </div>
+        <div class="side-stat">
+          <strong>{{ .Stats.Reply }}</strong>
+          <span>回复</span>
+        </div>
+        <div class="side-stat">
+          <strong>6</strong>
+          <span>板块</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card side-block fade-in fade-in-delay-2">
+      <h3>签到领积分</h3>
+      <p style="font-size:13px;color:var(--color-gray-600);margin-bottom:12px;">每日签到获取积分，连续签到奖励更多！</p>
+      {{ if .IsLogin }}
+      <button class="btn btn-primary btn-full" onclick="doCheckin()">立即签到</button>
+      <div id="checkin-result" style="margin-top:8px;font-size:12px;text-align:center;color:var(--color-gray-500);"></div>
+      {{ else }}
+      <a href="/login" class="btn btn-secondary btn-full">登录后签到</a>
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }}

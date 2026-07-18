@@ -1,0 +1,85 @@
+{{ define "content" }}
+<div style="margin:24px 0;">
+  <div class="section-title fade-in">
+    <h1 style="font-size:20px;">通知中心</h1>
+    <a href="#" onclick="markAllRead();return false;" style="font-size:13px;color:var(--color-primary);">全部标为已读</a>
+  </div>
+
+  <div class="glass-card fade-in fade-in-delay-1" style="padding:0;overflow:hidden;margin-bottom:16px;">
+    <div style="display:flex;border-bottom:1px solid rgba(0,0,0,0.06);">
+      <a href="?type=all" class="tab" style="flex:1;text-align:center;padding:14px;border-radius:0;border-bottom:2px solid {{ if eq .Type "all" }}var(--color-primary){{ else }}transparent{{ end }};color:{{ if eq .Type "all" }}var(--color-primary){{ else }}var(--color-gray-600){{ end }};">
+        全部
+      </a>
+      <a href="?type=reply" class="tab" style="flex:1;text-align:center;padding:14px;border-radius:0;border-bottom:2px solid {{ if eq .Type "reply" }}var(--color-primary){{ else }}transparent{{ end }};color:{{ if eq .Type "reply" }}var(--color-primary){{ else }}var(--color-gray-600){{ end }};">
+        回复
+      </a>
+      <a href="?type=like" class="tab" style="flex:1;text-align:center;padding:14px;border-radius:0;border-bottom:2px solid {{ if eq .Type "like" }}var(--color-primary){{ else }}transparent{{ end }};color:{{ if eq .Type "like" }}var(--color-primary){{ else }}var(--color-gray-600){{ end }};">
+        点赞
+      </a>
+      <a href="?type=system" class="tab" style="flex:1;text-align:center;padding:14px;border-radius:0;border-bottom:2px solid {{ if eq .Type "system" }}var(--color-primary){{ else }}transparent{{ end }};color:{{ if eq .Type "system" }}var(--color-primary){{ else }}var(--color-gray-600){{ end }};">
+        系统
+      </a>
+    </div>
+  </div>
+
+  <div class="glass-card fade-in fade-in-delay-2" style="padding:0;overflow:hidden;">
+    {{ range $n := .Notifications }}
+    <div class="notification-item {{ if not $n.IsRead }}unread{{ end }}">
+      <div class="notif-icon">
+        {{ if eq $n.Type "reply" }}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        {{ else if eq $n.Type "like" }}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        {{ else if eq $n.Type "follow" }}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+        {{ else }}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        {{ end }}
+      </div>
+      <div class="notif-main">
+        <div class="notif-title">
+          <span style="font-weight:600;">{{ $n.FromUser }}</span> {{ $n.Action }}
+          {{ if $n.TopicTitle }}
+          <span style="color:var(--color-primary);">《{{ $n.TopicTitle }}》</span>
+          {{ end }}
+        </div>
+        {{ if $n.Preview }}
+        <div style="font-size:13px;color:var(--color-gray-500);margin-top:4px;">{{ $n.Preview }}</div>
+        {{ end }}
+        <div class="notif-time">{{ $n.Time }}</div>
+      </div>
+      {{ if not $n.IsRead }}
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--color-danger);flex-shrink:0;margin-top:6px;"></div>
+      {{ end }}
+    </div>
+    {{ else }}
+    <div style="padding:60px 20px;text-align:center;color:var(--color-gray-400);">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;opacity:0.4;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <p style="font-size:14px;">暂无通知</p>
+    </div>
+    {{ end }}
+  </div>
+
+  {{ if .TotalPages }}
+  <div class="pagination">
+    {{ if eq .Page 1 }}
+    <span class="disabled">上一页</span>
+    {{ else }}
+    <a href="?page={{ sub .Page 1 }}&type={{ .Type }}">上一页</a>
+    {{ end }}
+    {{ range $i := seq 1 .TotalPages }}
+      {{ if eq $i $.Page }}
+      <span class="current">{{ $i }}</span>
+      {{ else }}
+      <a href="?page={{ $i }}&type={{ $.Type }}">{{ $i }}</a>
+      {{ end }}
+    {{ end }}
+    {{ if eq .Page .TotalPages }}
+    <span class="disabled">下一页</span>
+    {{ else }}
+    <a href="?page={{ add .Page 1 }}&type={{ .Type }}">下一页</a>
+    {{ end }}
+  </div>
+  {{ end }}
+</div>
+{{ end }}
