@@ -1,0 +1,38 @@
+# Navo NT QQ BOT 论坛配置
+# 众合会自研 · 借鉴 bbsgo
+
+server:
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout: 30s
+  write_timeout: 30s
+
+# 数据库: mysql / sqlite
+database:
+  driver: sqlite            # 默认 SQLite，开发友好；生产可切 mysql
+  dsn: "data/navo.db"       # sqlite 文件路径 / mysql dsn
+  max_idle: 10
+  max_open: 100
+  log_level: warn           # silent / error / warn / info
+
+jwt:
+  secret: "navo-nt-change-me-in-production"
+  issuer: "navo-nt-forum"
+  expire: 168h              # 7 天
+
+site:
+  name: "Navo NT QQ BOT 论坛"
+  description: "众合会自研 QQ 机器人社区"
+  per_page: 20
+  allow_register: true
+  upload_limit_mb: 5
+
+# 初始管理员（首次启动自动创建）
+admin:
+  username: "admin"
+  password: "admin@12345"
+  email: "admin@navo.local"
+
+log:
+  level: info               # debug / info / warn / error
+  encoding: json            # json / console
